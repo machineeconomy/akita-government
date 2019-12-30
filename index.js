@@ -1,15 +1,33 @@
 var paymentModule = require('iota-payment')
-var app = require('express')()
+var express = require('express')
+var app = express()
 var cors = require('cors')
+const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(cors())
 
+app.use('/', express.static('frontend/dist'));
+
+app.get("/info", (req, res) => {
+    paymentModule.getBalance()
+        .then(balance => {
+            console.log(balance)
+            res.send({
+                name: process.env.NAME,
+                message: 'hello world!', 
+                balance: balance
+            });
+        })
+        .catch(err => {
+        console.log(err)
+        })
+});
+
 var options = {
-    mount: '/payments',
-    value: 10,
-    websockets: true
+    websockets: true,
+    api: true
     // ...
 }
 
@@ -24,7 +42,7 @@ var onPaymentSuccess = function (payment) {
 paymentModule.on('payoutSent', onPaymentSuccess);
 
 // Start server with iota-payment module on '/custom'
-server.listen(5000, function () {
-    console.log(`Server started on http://localhost:5000 `)
+server.listen(5002, function () {
+    console.log(`Server started on http://localhost:5002 `)
 })
 
