@@ -7,13 +7,13 @@ Vue.config.productionTip = false
 import VueSocketIOExt from 'vue-socket.io-extended';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5000', { path: '/payments/socket' });
+const socket = io('http://localhost:5002', { path: '/payments/socket' });
 
 Vue.use(VueSocketIOExt, socket);
 
 import { store } from './store'
 import IotaPayment from 'vue-iota-payment'
-Vue.use(IotaPayment, { store, path: '/payments' })
+Vue.use(IotaPayment, { store, url: 'http://localhost:5002', path: '/iotapay', api_path: '/iotapay/api' })
 
 
 new Vue({
